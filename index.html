@@ -113,7 +113,7 @@
       <div class="score-msg" id="final-msg">お疲れ様でした！</div>
       <ul class="score-breakdown" id="breakdown-list"></ul>
       <div class="btn-area" style="margin-top:20px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
-        <button class="btn btn-success" onclick="startQuiz()">🔄 同じ設定でもう一度</button>
+        <button class="btn btn-success" onclick="retryQuiz()">🔄 同じ設定でもう一度</button>
         <button class="btn btn-primary" onclick="showStart()">⚙ 設定を変えて挑戦</button>
       </div>
     </div>
@@ -132,7 +132,7 @@ const allQuestions = [
       "Pcdは動作周波数に比例するが，電源電圧の二乗と負荷容量に反比例する。"
     ],
     answer: 1,
-    explanation: "CMOS LSIの動的消費電力Pcdは「C・V²・f」に比例します。Cは負荷容量、Vは電源電圧、fは動作周波数です。スイッチング時の消費エネルギーがC・V²に比例し、単位時間あたりのスイッチング数がfに比例するため、電源電圧の<strong>二乗</strong>・負荷容量・動作周波数に比例します。"
+    explanation: "CMOS LSIの動的消費電力Pcdは「C・V²・f」に比例します。Cは負荷容量、Vは電源電圧、fは動作周波数です。スイッチング時の消費エネルギーがC・V²に比例し、単位時間あたりのスイッチング数がfに比例するため、電源電圧の二乗・負荷容量・動作周波数に比例します。"
   },
   {
     category: "消費電力・回路設計",
@@ -144,7 +144,7 @@ const allQuestions = [
       "駆動電流・保持電流・漏洩電流による消費電力"
     ],
     answer: 0,
-    explanation: "CMOS LSIの消費電力P = Pcd（充放電電流）+ Pdp（貫通電流）+ Pl（リーク電流）の3要素で構成されます。Pcdはスイッチング時の充放電、Pdpはスイッチング時のpMOSとnMOSが同時ONになる瞬間の貫通電流、Plは静止状態でのリーク電流による消費電力です。"
+    explanation: "CMOS LSIの消費電力P = Pcd（充放電電流）+ Pdp（貫通電流）+ Pl（リーク電流）の3要素で構成されます。Pcdはスイッチング時の充放電、Pdpはpとnが同時ONになる瞬間の貫通電流、Plは静止状態でのリーク電流による消費電力です。"
   },
   {
     category: "消費電力・回路設計",
@@ -159,6 +159,18 @@ const allQuestions = [
     explanation: "CMOSインバータのスイッチング過渡期に、pMOSとnMOSが同時にONになる瞬間があり、このときVDDからGNDへ貫通電流（Idp）が流れます。これによる消費電力PdpはQ・V・f（Q:貫通電荷量、V:電源電圧、f:周波数）に比例します。"
   },
   {
+    category: "消費電力・回路設計",
+    text: "MOSトランジスタのサブスレッショルド電流（サブVtリーク電流）に関して正しい記述はどれか。",
+    choices: [
+      "ゲート電圧がしきい値電圧Vtを大きく上回った状態で流れる電流である。",
+      "ゲート電圧がしきい値電圧Vt以下でも流れる微小な電流で、温度上昇やVt低下により増大する。",
+      "ドレイン・ソース間が短絡した際に流れる故障電流である。",
+      "サブスレッショルド電流は動作周波数に比例して増加する。"
+    ],
+    answer: 1,
+    explanation: "MOSトランジスタのサブスレッショルド電流は、ゲート電圧がしきい値電圧Vt以下でも流れる微小なリーク電流です。半導体の微細化によるVt低下や温度上昇によって急増し、静的消費電力（Pl = Il×V）の大きな要因となります。"
+  },
+  {
     category: "故障診断・テスト",
     text: "原因結果法による故障診断（故障辞書法）のフロー中で、「事前に各テストパターンに対してどの故障が検出されるかをリストアップしたもの」は何か。",
     choices: [
@@ -168,7 +180,7 @@ const allQuestions = [
       "クリティカルパス"
     ],
     answer: 1,
-    explanation: "故障辞書法では、まず<strong>故障シミュレーション</strong>を実施し、各テストパターンに対してどの故障が検出されるかをリストアップした<strong>故障辞書</strong>を作成します。実際の診断では、テスト結果が不一致のパターンが検出する故障集合の共通部分として<strong>被疑故障集合</strong>を求めます。"
+    explanation: "故障辞書法では、まず故障シミュレーションを実施し、各テストパターンに対してどの故障が検出されるかをリストアップした故障辞書を作成します。実際の診断では、テスト結果が不一致のパターンが検出する故障集合の共通部分として被疑故障集合を求めます。"
   },
   {
     category: "故障診断・テスト",
@@ -180,19 +192,19 @@ const allQuestions = [
       "故障シミュレーション法"
     ],
     answer: 2,
-    explanation: "故障診断の方法は大別して<strong>原因結果法</strong>と<strong>結果原因法</strong>に分かれます。原因結果法の代表手法は故障辞書法です。結果原因法の代表手法は<strong>クリティカルパストレース法</strong>で、テスト結果が不一致となった出力から故障伝搬経路を逆にたどることで故障候補を特定します。"
+    explanation: "故障診断は原因結果法と結果原因法に大別されます。原因結果法の代表手法は故障辞書法です。結果原因法の代表手法はクリティカルパストレース法で、テスト結果が不一致となった出力から故障伝搬経路を逆にたどることで故障候補を特定します。"
   },
   {
     category: "故障診断・テスト",
     text: "スタック故障モデル（縮退故障）に関して正しい記述はどれか。",
     choices: [
-      "信号線が常に論理値'0'または'1'に固定されているとモデル化する故障。",
+      "信号線が常に論理値0または1に固定されているとモデル化する故障。",
       "回路の遅延が設計値より大きくなるとモデル化する故障。",
       "2本以上の信号線が短絡しているとモデル化する故障。",
       "電源とGND間が開放状態になるとモデル化する故障。"
     ],
     answer: 0,
-    explanation: "<strong>縮退故障（スタック故障）</strong>は、信号線が常に論理値'0'（stuck-at-0）または論理値'1'（stuck-at-1）に固定された状態をモデル化した故障モデルです。LSIのテスト設計において最も広く使われる基本的な故障モデルです。他の選択肢は遅延故障、ブリッジ故障、オープン故障の説明です。"
+    explanation: "縮退故障（スタック故障）は、信号線が常に論理値0（stuck-at-0）または論理値1（stuck-at-1）に固定された状態をモデル化した故障モデルです。LSIのテスト設計において最も広く使われる基本的な故障モデルです。"
   },
   {
     category: "A/D・D/A変換",
@@ -204,127 +216,19 @@ const allQuestions = [
       "評価に使用する信号に歪みが含まれていても、FFTでキャンセルされるため問題ない。"
     ],
     answer: 3,
-    explanation: "選択肢4が誤りです。評価信号に歪みが含まれていると、その歪みがA/D変換器の特性として測定に影響してしまいます。FFTは歪みをキャンセルしません。SNRは6.02×N+1.76[dB]（Nはビット数）が理論的上限値です。THD+N測定ではノッチフィルタで基本波を除去して残りの歪み+雑音を測定することがあります。"
+    explanation: "選択肢4が誤りです。評価信号に歪みが含まれていると、その歪みがA/D変換器の特性として測定に影響してしまいます。FFTは歪みをキャンセルしません。SNRの理論的上限値は6.02×N+1.76[dB]（Nはビット数）です。"
   },
   {
     category: "A/D・D/A変換",
-    text: "N ビットのA/D変換器において、量子化誤差のみを考慮した場合のSNR理論値として正しい式はどれか。",
+    text: "NビットのA/D変換器において、量子化誤差のみを考慮した場合のSNR理論値として正しい式はどれか。",
     choices: [
       "SNR = 3.02 × N + 1.76 [dB]",
       "SNR = 6.02 × N + 1.76 [dB]",
-      "SNR = 6.02 × N − 1.76 [dB]",
+      "SNR = 6.02 × N - 1.76 [dB]",
       "SNR = 10 × log(N) + 1.76 [dB]"
     ],
     answer: 1,
-    explanation: "N ビットA/D変換器の量子化雑音によるSNR理論値は<strong>SNR = 6.02 × N + 1.76 [dB]</strong>です。ビット数が1増えるごとにSNRは約6dB向上します。例えば16ビットのA/Dコンバータの理論SNRは約98dBとなります。"
-  },
-  {
-    category: "機能安全・信頼性",
-    text: "機能安全規格IEC61508の自動車分野向けサブ規格として正しいものはどれか。",
-    choices: [
-      "ISO9001",
-      "ISO14000",
-      "ISO26262",
-      "IEC62304"
-    ],
-    answer: 2,
-    explanation: "<strong>ISO26262</strong>は機能安全規格IEC61508の自動車分野向けサブ規格です。ASILという安全度水準を定義しています（ASIL A〜D、Dが最も厳しい）。IEC62304は医療機器向け、IEC62061は産業機器向けです。ISO9001は品質マネジメントシステム、ISO14000は環境マネジメントシステムの規格です。"
-  },
-  {
-    category: "機能安全・信頼性",
-    text: "ISO26262のASIL（Automotive Safety Integrity Level）に関して正しい記述はどれか。",
-    choices: [
-      "ASILはASIL AからASIL Dまでの4段階があり、ASIL Aが最も厳しい要求レベルである。",
-      "ASILはASIL AからASIL Dまでの4段階があり、ASIL Dが最も厳しい要求レベルである。",
-      "ASILはSIL 1からSIL 4に対応しており、SIL 1が最も厳しい要求レベルである。",
-      "ASILの決定はハザードの過酷度のみで行う。"
-    ],
-    answer: 1,
-    explanation: "ISO26262では安全度水準として<strong>ASIL A〜D</strong>が規定されており、<strong>ASIL Dが最も厳しい</strong>要求レベルです。ASILの決定は①ハザードの過酷度（Severity）、②発生頻度（Exposure）、③回避可能性＝制御性（Controllability）の3つの組み合わせから決定されます。"
-  },
-  {
-    category: "機能安全・信頼性",
-    text: "FMEA（Failure Mode and Effect Analysis：故障モード影響解析）の説明として正しいものはどれか。",
-    choices: [
-      "システムの故障モードとその影響を上位から下位へ分析するトップダウン手法。",
-      "各コンポーネントの故障モードを洗い出し、それがシステムに与える影響を分析するボトムアップ手法。",
-      "ソフトウェアのバグを検出するためのテスト手法。",
-      "製品の製造工程における不良率を統計的に管理する手法。"
-    ],
-    answer: 1,
-    explanation: "<strong>FMEA</strong>（故障モード影響解析）は、各コンポーネントの故障モードを洗い出し、それがシステム全体に与える影響を評価する<strong>ボトムアップ</strong>手法です。ISO26262のハザード分析にも活用されます。トップダウン手法はFTA（故障の木解析）です。"
-  },
-  {
-    category: "半導体製造プロセス",
-    text: "CMOSトランジスタの製造工程において、ゲート絶縁膜を形成する主な方法として正しいものはどれか。",
-    choices: [
-      "スパッタリングによる物理的堆積",
-      "シリコンの熱酸化または化学気相成長（CVD）",
-      "電解めっきによる成膜",
-      "イオン注入によるドーピング"
-    ],
-    answer: 1,
-    explanation: "CMOSトランジスタのゲート絶縁膜は、従来はシリコンを高温で酸化させる<strong>熱酸化法</strong>（SiO₂形成）が主流でした。近年の先端プロセスでは、EOT（等価酸化膜厚）を薄くするためにHfO₂等の<strong>高誘電率（High-k）材料</strong>をCVD/ALD（原子層堆積）で形成します。スパッタリングは金属配線、電解めっきはCu配線形成に使われます。"
-  },
-  {
-    category: "半導体製造プロセス",
-    text: "半導体製造プロセスにおけるフォトリソグラフィの目的として正しいものはどれか。",
-    choices: [
-      "シリコンウェハ上に不純物をイオン注入してPN接合を形成すること。",
-      "マスクパターンをウェハ上のフォトレジストに転写し、エッチングや不純物導入の領域を定義すること。",
-      "金属配線層をウェハ上に堆積させること。",
-      "トランジスタのゲート絶縁膜を熱酸化で形成すること。"
-    ],
-    answer: 1,
-    explanation: "<strong>フォトリソグラフィ</strong>は、フォトマスクのパターンを光（露光）によってフォトレジストに転写し、その後の<strong>エッチング</strong>や<strong>イオン注入</strong>などの工程で加工する領域を正確に定義するプロセスです。半導体の微細化（ムーアの法則）を支える中核技術です。"
-  },
-  {
-    category: "LSI設計フロー",
-    text: "デジタルLSIの設計フローにおいて「論理合成」の目的として正しいものはどれか。",
-    choices: [
-      "トランジスタのレイアウトパターンを決定すること。",
-      "RTL（レジスタ転送レベル）の記述をゲートレベルのネットリストに変換すること。",
-      "テストパターンを自動生成すること。",
-      "チップの消費電力をシミュレーションすること。"
-    ],
-    answer: 1,
-    explanation: "<strong>論理合成</strong>は、HDL（VerilogやVHDL等）で記述されたRTL（Register Transfer Level）の設計記述を、テクノロジーライブラリに基づいた<strong>ゲートレベルのネットリスト</strong>に自動変換するプロセスです。設計フローはRTL記述→論理合成→配置配線→レイアウト検証（DRC/LVS）の順に進みます。"
-  },
-  {
-    category: "LSI設計フロー",
-    text: "LSI設計のDFT（Design For Testability：テスト容易化設計）の代表的な手法として正しいものはどれか。",
-    choices: [
-      "フロアプランによるチップ面積の最小化",
-      "スキャンチェーンを挿入してフリップフロップの観測・制御性を高めること",
-      "配線容量を削減して動作速度を向上させること",
-      "電源網を強化してIR降下を防ぐこと"
-    ],
-    answer: 1,
-    explanation: "<strong>DFT（テスト容易化設計）</strong>の代表的手法は<strong>スキャンテスト</strong>です。回路内のフリップフロップをスキャンチェーンとして接続し、直接値を設定（制御性向上）・読み出し（観測性向上）できるようにすることで、テストカバレッジを大幅に向上させます。他にもBIST（内蔵自己テスト）、バウンダリスキャン（JTAG）などがあります。"
-  },
-  {
-    category: "LSI設計フロー",
-    text: "STA（Static Timing Analysis：スタティックタイミング解析）の目的として正しいものはどれか。",
-    choices: [
-      "チップの全てのタイミングパスを網羅的に検証し、セットアップ・ホールド時間違反がないか確認すること。",
-      "動的シミュレーションにより特定の入力パターンに対する動作を確認すること。",
-      "製造後のチップに対してテストを実施し、不良品を選別すること。",
-      "チップの消費電力を削減するための最適化を行うこと。"
-    ],
-    answer: 0,
-    explanation: "<strong>STA（スタティックタイミング解析）</strong>は、実際に入力パターンをシミュレーションせずに、設計内の<strong>全タイミングパスを網羅的に解析</strong>し、クロック周期に対するセットアップ違反・ホールド違反がないかを確認する手法です。動的シミュレーションと比べて検証時間が大幅に短縮され、大規模LSI設計では必須の手法です。"
-  },
-  {
-    category: "消費電力・回路設計",
-    text: "MOSトランジスタのサブスレッショルド電流（サブVt リーク電流）に関して正しい記述はどれか。",
-    choices: [
-      "ゲート電圧がしきい値電圧Vtを大きく上回った状態で流れる電流である。",
-      "ゲート電圧がしきい値電圧Vt以下でも流れる微小な電流で、温度上昇や Vt低下により増大する。",
-      "ドレイン・ソース間が短絡した際に流れる故障電流である。",
-      "サブスレッショルド電流は動作周波数に比例して増加する。"
-    ],
-    answer: 1,
-    explanation: "MOSトランジスタのサブスレッショルド電流は、ゲート電圧がしきい値電圧<strong>Vt以下</strong>でも流れる微小なリーク電流です。半導体の微細化によるVt低下や温度上昇によって急増し、静的消費電力（Pl = Il×V）の大きな要因となります。特に先端プロセスでは低消費電力設計において重要な課題です。"
+    explanation: "NビットA/D変換器の量子化雑音によるSNR理論値はSNR = 6.02 × N + 1.76 [dB]です。ビット数が1増えるごとにSNRは約6dB向上します。例えば16ビットのA/DコンバータのSNR理論値は約98dBとなります。"
   },
   {
     category: "A/D・D/A変換",
@@ -336,7 +240,43 @@ const allQuestions = [
       "DACの変換速度を表す指標。"
     ],
     answer: 1,
-    explanation: "<strong>INL（積分非直線性誤差）</strong>は、全デジタル入力コードにわたる実際のアナログ出力値と<strong>理想直線</strong>（エンドポイントを結ぶ直線）からの最大偏差をLSB単位で表した値です。一方、<strong>DNL（微分非直線性誤差）</strong>は隣接コード間の実際のステップ幅と理想ステップ幅（1LSB）の差の最大値です。"
+    explanation: "INL（積分非直線性誤差）は、全デジタル入力コードにわたる実際のアナログ出力値と理想直線からの最大偏差をLSB単位で表した値です。一方、DNL（微分非直線性誤差）は隣接コード間の実際のステップ幅と理想ステップ幅（1LSB）の差の最大値です。"
+  },
+  {
+    category: "機能安全・信頼性",
+    text: "機能安全規格IEC61508の自動車分野向けサブ規格として正しいものはどれか。",
+    choices: [
+      "ISO9001",
+      "ISO14000",
+      "ISO26262",
+      "IEC62304"
+    ],
+    answer: 2,
+    explanation: "ISO26262は機能安全規格IEC61508の自動車分野向けサブ規格です。ASILという安全度水準を定義しています（ASIL A〜D、Dが最も厳しい）。IEC62304は医療機器向け、IEC62061は産業機器向けです。ISO9001は品質マネジメント、ISO14000は環境マネジメントの規格です。"
+  },
+  {
+    category: "機能安全・信頼性",
+    text: "ISO26262のASIL（Automotive Safety Integrity Level）に関して正しい記述はどれか。",
+    choices: [
+      "ASILはASIL AからASIL Dまでの4段階があり、ASIL Aが最も厳しい要求レベルである。",
+      "ASILはASIL AからASIL Dまでの4段階があり、ASIL Dが最も厳しい要求レベルである。",
+      "ASILはSIL 1からSIL 4に対応しており、SIL 1が最も厳しい要求レベルである。",
+      "ASILの決定はハザードの過酷度のみで行う。"
+    ],
+    answer: 1,
+    explanation: "ISO26262ではASIL A〜Dが規定されており、ASIL Dが最も厳しい要求レベルです。ASILの決定は(1)ハザードの過酷度（Severity）、(2)発生頻度（Exposure）、(3)回避可能性・制御性（Controllability）の3つの組み合わせから決定されます。"
+  },
+  {
+    category: "機能安全・信頼性",
+    text: "FMEA（Failure Mode and Effect Analysis：故障モード影響解析）の説明として正しいものはどれか。",
+    choices: [
+      "システムの故障モードとその影響を上位から下位へ分析するトップダウン手法。",
+      "各コンポーネントの故障モードを洗い出し、それがシステムに与える影響を分析するボトムアップ手法。",
+      "ソフトウェアのバグを検出するためのテスト手法。",
+      "製品の製造工程における不良率を統計的に管理する手法。"
+    ],
+    answer: 1,
+    explanation: "FMEA（故障モード影響解析）は、各コンポーネントの故障モードを洗い出し、それがシステム全体に与える影響を評価するボトムアップ手法です。ISO26262のハザード分析にも活用されます。トップダウン手法はFTA（故障の木解析）です。"
   },
   {
     category: "機能安全・信頼性",
@@ -348,7 +288,31 @@ const allQuestions = [
       "製造工程中のパーティクルによる歩留まりへの影響を評価する。"
     ],
     answer: 1,
-    explanation: "<strong>THB試験（Temperature Humidity Bias）</strong>は、高温（通常85℃）・高湿（85%RH）・バイアス印加条件下でデバイスを長時間動作させ、水分浸入による<strong>腐食・金属マイグレーション・絶縁劣化</strong>などに対する信頼性を加速評価する試験です。車載・産業機器向け半導体では特に重要な試験の一つです。"
+    explanation: "THB試験（Temperature Humidity Bias）は、高温（通常85度）・高湿（85%RH）・バイアス印加条件下でデバイスを長時間動作させ、水分浸入による腐食・金属マイグレーション・絶縁劣化などに対する信頼性を加速評価する試験です。"
+  },
+  {
+    category: "半導体製造プロセス",
+    text: "CMOSトランジスタの製造工程において、ゲート絶縁膜を形成する主な方法として正しいものはどれか。",
+    choices: [
+      "スパッタリングによる物理的堆積",
+      "シリコンの熱酸化または化学気相成長（CVD）",
+      "電解めっきによる成膜",
+      "イオン注入によるドーピング"
+    ],
+    answer: 1,
+    explanation: "CMOSトランジスタのゲート絶縁膜は、従来はシリコンを高温で酸化させる熱酸化法（SiO2形成）が主流でした。近年の先端プロセスでは、HfO2等の高誘電率（High-k）材料をCVD/ALD（原子層堆積）で形成します。スパッタリングは金属配線、電解めっきはCu配線形成に使われます。"
+  },
+  {
+    category: "半導体製造プロセス",
+    text: "半導体製造プロセスにおけるフォトリソグラフィの目的として正しいものはどれか。",
+    choices: [
+      "シリコンウェハ上に不純物をイオン注入してPN接合を形成すること。",
+      "マスクパターンをウェハ上のフォトレジストに転写し、エッチングや不純物導入の領域を定義すること。",
+      "金属配線層をウェハ上に堆積させること。",
+      "トランジスタのゲート絶縁膜を熱酸化で形成すること。"
+    ],
+    answer: 1,
+    explanation: "フォトリソグラフィは、フォトマスクのパターンを光（露光）によってフォトレジストに転写し、その後のエッチングやイオン注入などの工程で加工する領域を正確に定義するプロセスです。半導体の微細化（ムーアの法則）を支える中核技術です。"
   },
   {
     category: "半導体製造プロセス",
@@ -360,15 +324,54 @@ const allQuestions = [
       "シリコン酸化膜のドライエッチング"
     ],
     answer: 2,
-    explanation: "<strong>デュアルダマシン法</strong>は、銅（Cu）配線形成に使われるプロセスです。Cu はドライエッチングが困難なため、絶縁膜に溝（トレンチ）とビアホールをあらかじめ形成し、そこにCuをめっきで埋め込み、余分なCuをCMP（化学機械研磨）で除去して配線を形成します。先端LSIの多層配線に広く採用されています。"
+    explanation: "デュアルダマシン法は、銅（Cu）配線形成に使われるプロセスです。CuはドライエッチングがSiO2やAlより困難なため、絶縁膜に溝（トレンチ）とビアホールをあらかじめ形成し、そこにCuをめっきで埋め込み、余分なCuをCMP（化学機械研磨）で除去して配線を形成します。"
+  },
+  {
+    category: "LSI設計フロー",
+    text: "デジタルLSIの設計フローにおいて「論理合成」の目的として正しいものはどれか。",
+    choices: [
+      "トランジスタのレイアウトパターンを決定すること。",
+      "RTL（レジスタ転送レベル）の記述をゲートレベルのネットリストに変換すること。",
+      "テストパターンを自動生成すること。",
+      "チップの消費電力をシミュレーションすること。"
+    ],
+    answer: 1,
+    explanation: "論理合成は、HDL（VerilogやVHDL等）で記述されたRTL（Register Transfer Level）の設計記述を、テクノロジーライブラリに基づいたゲートレベルのネットリストに自動変換するプロセスです。設計フローはRTL記述→論理合成→配置配線→レイアウト検証の順に進みます。"
+  },
+  {
+    category: "LSI設計フロー",
+    text: "LSI設計のDFT（Design For Testability：テスト容易化設計）の代表的な手法として正しいものはどれか。",
+    choices: [
+      "フロアプランによるチップ面積の最小化",
+      "スキャンチェーンを挿入してフリップフロップの観測・制御性を高めること",
+      "配線容量を削減して動作速度を向上させること",
+      "電源網を強化してIR降下を防ぐこと"
+    ],
+    answer: 1,
+    explanation: "DFT（テスト容易化設計）の代表的手法はスキャンテストです。回路内のフリップフロップをスキャンチェーンとして接続し、直接値を設定（制御性向上）・読み出し（観測性向上）できるようにすることで、テストカバレッジを大幅に向上させます。"
+  },
+  {
+    category: "LSI設計フロー",
+    text: "STA（Static Timing Analysis：スタティックタイミング解析）の目的として正しいものはどれか。",
+    choices: [
+      "チップの全てのタイミングパスを網羅的に検証し、セットアップ・ホールド時間違反がないか確認すること。",
+      "動的シミュレーションにより特定の入力パターンに対する動作を確認すること。",
+      "製造後のチップに対してテストを実施し、不良品を選別すること。",
+      "チップの消費電力を削減するための最適化を行うこと。"
+    ],
+    answer: 0,
+    explanation: "STA（スタティックタイミング解析）は、実際に入力パターンをシミュレーションせずに、設計内の全タイミングパスを網羅的に解析し、クロック周期に対するセットアップ違反・ホールド違反がないかを確認する手法です。大規模LSI設計では必須の手法です。"
   }
 ];
 
+// グローバル変数
 let questions = [];
 let currentIndex = 0;
 let correctCount = 0;
 let categoryResults = null;
 let answered = false;
+let lastCategory = 'all';
+let lastNum = '10';
 
 function showStart() {
   document.getElementById('start-screen').style.display = 'block';
@@ -376,53 +379,76 @@ function showStart() {
   document.getElementById('result-screen').style.display = 'none';
 }
 
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+  }
+  return arr;
+}
+
 function startQuiz() {
-  const cat = document.getElementById('category-select').value;
-  const num = document.getElementById('num-select').value;
+  lastCategory = document.getElementById('category-select').value;
+  lastNum = document.getElementById('num-select').value;
+  runQuiz(lastCategory, lastNum);
+}
 
-  let pool = cat === 'all' ? [...allQuestions] : allQuestions.filter(q => q.category === cat);
+function retryQuiz() {
+  runQuiz(lastCategory, lastNum);
+}
+
+function runQuiz(cat, num) {
+  // 問題プール作成
+  let pool = (cat === 'all') ? allQuestions.slice() : allQuestions.filter(function(q){ return q.category === cat; });
   shuffle(pool);
-  questions = num === 'all' ? pool : pool.slice(0, Math.min(parseInt(num), pool.length));
+  questions = (num === 'all') ? pool : pool.slice(0, Math.min(parseInt(num), pool.length));
 
+  // カウンタ初期化
   currentIndex = 0;
   correctCount = 0;
   categoryResults = null;
-  questions.forEach(q => { if(!categoryResults[q.category]) categoryResults[q.category] = {correct:0, total:0}; categoryResults[q.category].total++; });
+  answered = false;
 
+  // カテゴリ集計初期化
+  for (let i = 0; i < questions.length; i++) {
+    const c = questions[i].category;
+    if (!categoryResults[c]) {
+      categoryResults[c] = { correct: 0, total: 0 };
+    }
+    categoryResults[c].total++;
+  }
+
+  // 画面切り替え
   document.getElementById('start-screen').style.display = 'none';
   document.getElementById('result-screen').style.display = 'none';
   document.getElementById('quiz-screen').style.display = 'block';
-  showQuestion();
-}
 
-function shuffle(arr) {
-  for(let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i+1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
+  showQuestion();
 }
 
 function showQuestion() {
   answered = false;
   const q = questions[currentIndex];
   const total = questions.length;
-  document.getElementById('q-counter').textContent = `問題 ${currentIndex+1} / ${total}`;
-  document.getElementById('q-score-live').textContent = `正解: ${correctCount}問`;
-  document.getElementById('progress-fill').style.width = `${(currentIndex/total)*100}%`;
+
+  document.getElementById('q-counter').textContent = '問題 ' + (currentIndex + 1) + ' / ' + total;
+  document.getElementById('q-score-live').textContent = '正解: ' + correctCount + '問';
+  document.getElementById('progress-fill').style.width = ((currentIndex / total) * 100) + '%';
   document.getElementById('q-category').textContent = q.category;
-  document.getElementById('q-num').textContent = `第${currentIndex+1}問`;
+  document.getElementById('q-num').textContent = '第' + (currentIndex + 1) + '問';
   document.getElementById('q-text').textContent = q.text;
 
   const list = document.getElementById('choices-list');
   list.innerHTML = '';
-  q.choices.forEach((c, i) => {
+  for (let i = 0; i < q.choices.length; i++) {
     const li = document.createElement('li');
     const btn = document.createElement('button');
-    btn.textContent = `${i+1}. ${c}`;
-    btn.onclick = () => selectAnswer(i);
+    btn.textContent = (i + 1) + '. ' + q.choices[i];
+    btn.setAttribute('data-index', i);
+    btn.onclick = function() { selectAnswer(parseInt(this.getAttribute('data-index'))); };
     li.appendChild(btn);
     list.appendChild(li);
-  });
+  }
 
   document.getElementById('result-box').style.display = 'none';
   document.getElementById('explanation-box').style.display = 'none';
@@ -430,37 +456,41 @@ function showQuestion() {
 }
 
 function selectAnswer(idx) {
-  if(answered) return;
+  if (answered) return;
   answered = true;
+
   const q = questions[currentIndex];
   const buttons = document.querySelectorAll('#choices-list button');
-  buttons.forEach(btn => btn.disabled = true);
+  for (let i = 0; i < buttons.length; i++) {
+    buttons[i].disabled = true;
+  }
 
   const resultBox = document.getElementById('result-box');
   const explBox = document.getElementById('explanation-box');
 
-  if(idx === q.answer) {
+  if (idx === q.answer) {
     buttons[idx].classList.add('correct');
     resultBox.className = 'result-box correct-msg';
-    resultBox.textContent = '✅ 正解です！';
+    resultBox.textContent = '正解です！';
     correctCount++;
     categoryResults[q.category].correct++;
   } else {
     buttons[idx].classList.add('wrong');
     buttons[q.answer].classList.add('reveal');
     resultBox.className = 'result-box wrong-msg';
-    resultBox.textContent = `❌ 不正解。正解は「${q.answer+1}. ${q.choices[q.answer]}」です。`;
+    resultBox.textContent = '不正解。正解は「' + (q.answer + 1) + '. ' + q.choices[q.answer] + '」です。';
   }
+
   resultBox.style.display = 'block';
-  explBox.innerHTML = `<strong>📖 解説：</strong><br>${q.explanation}`;
+  explBox.innerHTML = '<strong>解説：</strong><br>' + q.explanation;
   explBox.style.display = 'block';
   document.getElementById('next-btn-area').style.display = 'block';
-  document.getElementById('q-score-live').textContent = `正解: ${correctCount}問`;
+  document.getElementById('q-score-live').textContent = '正解: ' + correctCount + '問';
 }
 
 function nextQuestion() {
   currentIndex++;
-  if(currentIndex >= questions.length) {
+  if (currentIndex >= questions.length) {
     showResult();
   } else {
     showQuestion();
@@ -470,26 +500,36 @@ function nextQuestion() {
 function showResult() {
   document.getElementById('quiz-screen').style.display = 'none';
   document.getElementById('result-screen').style.display = 'block';
+
   const total = questions.length;
-  const pct = Math.round((correctCount/total)*100);
-  document.getElementById('final-score').textContent = `${correctCount} / ${total}`;
+  const pct = Math.round((correctCount / total) * 100);
+
+  document.getElementById('final-score').textContent = correctCount + ' / ' + total;
+
   let msg = '';
-  if(pct >= 70) msg = `🎉 合格ライン達成！（${pct}%正解）素晴らしいです！`;
-  else if(pct >= 50) msg = `📈 もう一息！（${pct}%正解）復習して再挑戦しましょう。`;
-  else msg = `💪 基礎から復習しましょう！（${pct}%正解）公式テキストで確認を。`;
+  if (pct >= 70) {
+    msg = '合格ライン達成！（' + pct + '％正解）素晴らしいです！';
+  } else if (pct >= 50) {
+    msg = 'もう一息！（' + pct + '％正解）復習して再挑戦しましょう。';
+  } else {
+    msg = '基礎から復習しましょう！（' + pct + '％正解）公式テキストで確認を。';
+  }
   document.getElementById('final-msg').textContent = msg;
 
   const bl = document.getElementById('breakdown-list');
-  bl.innerHTML = '<li style="font-weight:bold; padding-bottom:8px;">📊 カテゴリ別成績</li>';
-  Object.entries(categoryResults).forEach(([cat, res]) => {
-    if(res.total > 0) {
+  bl.innerHTML = '<li style="font-weight:bold; padding-bottom:8px;">カテゴリ別成績</li>';
+  const cats = Object.keys(categoryResults);
+  for (let i = 0; i < cats.length; i++) {
+    const cat = cats[i];
+    const res = categoryResults[cat];
+    if (res.total > 0) {
+      const p = Math.round((res.correct / res.total) * 100);
+      const mark = p >= 70 ? '○' : p >= 50 ? '△' : '×';
       const li = document.createElement('li');
-      const p = Math.round((res.correct/res.total)*100);
-      const bar = p >= 70 ? '🟢' : p >= 50 ? '🟡' : '🔴';
-      li.textContent = `${bar} ${cat}：${res.correct}/${res.total}問（${p}%）`;
+      li.textContent = mark + ' ' + cat + '：' + res.correct + '/' + res.total + '問（' + p + '％）';
       bl.appendChild(li);
     }
-  });
+  }
 }
 </script>
 </body>
